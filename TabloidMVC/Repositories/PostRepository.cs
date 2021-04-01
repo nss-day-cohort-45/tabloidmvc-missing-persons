@@ -142,9 +142,11 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                SELECT Id, Title, Content, ImageLocation, CreateDateTime, PublishDateTime, CategoryId, UserProfileId
-                FROM Post
-                WHERE UserProfileId = @userProfileId
+                SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.CategoryId, p.UserProfileId, Category.Name AS Name, UserProfile.Id, UserProfile.DisplayName AS DisplayName
+                FROM Post p
+                JOIN Category ON Category.Id = p.CategoryId
+                JOIN UserProfile ON UserProfile.Id = p.UserProfileId
+                WHERE p.UserProfileId = @userProfileId
             ";
 
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
@@ -164,8 +166,20 @@ namespace TabloidMVC.Repositories
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
                             PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
                             CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
-                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId"))
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("userProfileId")),
+                           
 
+                        };
+
+                        post.Category = new Category()
+                        { 
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+
+                        };
+
+                        post.UserProfile = new UserProfile()
+                        {
+                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName"))
                         };
 
                         // Check if optional columns are null
