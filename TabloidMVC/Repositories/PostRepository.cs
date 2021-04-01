@@ -133,6 +133,56 @@ namespace TabloidMVC.Repositories
         }
 
 
+        public List<Post> GetPostsByUserProfileId(int userProfileId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                SELECT Id, Title, Content, ImageLocation, CreateDateTime, PublishDateTime, CategoryId, UserProfileId
+                FROM Post
+                WHERE UserProfileId = @userProfileId
+            ";
+
+                    cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<Post> posts = new List<Post>();
+
+                    while (reader.Read())
+                    {
+                        Post post = new Post()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Content = reader.GetString(reader.GetOrdinal("Content")),
+                            ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId"))
+
+                        };
+
+                        // Check if optional columns are null
+                        if (reader.IsDBNull(reader.GetOrdinal("ImageLocation")) == false)
+                        {
+                            post.ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation"));
+                        }
+
+                        posts.Add(post);
+                    }
+                    reader.Close();
+                    return posts;
+                }
+            }
+        }
+
+
         public void Add(Post post)
         {
             using (var conn = Connection)

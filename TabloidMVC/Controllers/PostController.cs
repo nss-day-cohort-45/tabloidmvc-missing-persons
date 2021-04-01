@@ -41,6 +41,21 @@ namespace TabloidMVC.Controllers
             return View(post);
         }
 
+        public IActionResult MyPosts(int userProfileId)
+        {
+            var post = _postRepository.GetPostsByUserProfileId(userProfileId);
+            if (post == null)
+            {
+                int userId = GetCurrentUserProfileId();
+                post = _postRepository.GetPostsByUserProfileId(userId);
+                if (post == null)
+                {
+                    return NotFound();
+                }
+            }
+            return View(post);
+        }
+
         public IActionResult Create()
         {
             var vm = new PostCreateViewModel();
