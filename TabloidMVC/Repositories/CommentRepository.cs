@@ -23,7 +23,7 @@ namespace TabloidMVC.Repositories
                               p.Id AS PostId, p.Title,
                               u.Id AS UserId, u.DisplayName
                          FROM Comment c
-                              LEFT JOIN Post p ON c.PostId = p.id;
+                              LEFT JOIN Post p ON c.PostId = p.id
                               LEFT JOIN User u ON c.UserProfileId = u.id;";
                     var reader = cmd.ExecuteReader();
 
@@ -45,6 +45,11 @@ namespace TabloidMVC.Repositories
                            Title = reader.GetString(reader.GetOrdinal("Title"))
                        };
 
+                        comment.UserProfile = new UserProfile()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("UserId")),
+                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName"))
+                        };
 
 
                     comments.Add(comment);
