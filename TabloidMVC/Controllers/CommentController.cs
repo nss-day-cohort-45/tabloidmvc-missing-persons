@@ -1,72 +1,64 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using TabloidMVC.Repositories;
 using System.Collections.Generic;
 using TabloidMVC.Models;
-using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
 {
-    public class CategoryController : Controller
+    
+    public class CommentController : Controller
     {
-        private readonly ICategoryRepository _categoryRepo;
+
+        private readonly ICommentRepository _commentRepo;
 
         // ASP.NET will give us an instance of our Walker Repository. This is called "Dependency Injection"
-        public CategoryController(ICategoryRepository categoryRepository)
+        public CommentController(ICommentRepository commentRepository)
         {
-            _categoryRepo = categoryRepository;
+            _commentRepo = commentRepository;
         }
-        // GET: Category
+
+        // GET: CommentController
         public ActionResult Index()
         {
-            List<Category> catagories = _categoryRepo.GetAllCategories();
-
-            return View(catagories);
+            List<Comment> comments = _commentRepo.GetAllComments();
+            return View(comments);
         }
 
-        // GET: Category/Details/5
+        // GET: CommentController/Details/5
         public ActionResult Details(int id)
         {
-            Category category = _categoryRepo.GetCategoryById(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
+            return View();
         }
 
-        // GET: Category/Create
+        // GET: CommentController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Category/Create
+        // POST: CommentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Category category)
+        public ActionResult Create(IFormCollection collection)
         {
             try
             {
-                _categoryRepo.AddCategory(category);
-
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch
             {
-                return View(category);
+                return View();
             }
         }
 
-        // GET: Category/Edit/5
+        // GET: CommentController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Category/Edit/5
+        // POST: CommentController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -81,13 +73,13 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        // GET: Category/Delete/5
+        // GET: CommentController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Category/Delete/5
+        // POST: CommentController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
