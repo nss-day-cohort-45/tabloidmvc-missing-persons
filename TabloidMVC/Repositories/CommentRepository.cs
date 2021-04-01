@@ -19,10 +19,12 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT c.Id AS CommentId, c.Subject, c.Content, c.AuthorName, c.CreationDate,
-                              p.Id AS PostId, p.Title
+                       SELECT c.Id AS CommentId, c.Subject, c.Content, c.CreateDateTime,
+                              p.Id AS PostId, p.Title,
+                              u.Id AS UserId, u.DisplayName
                          FROM Comment c
-                              LEFT JOIN Post p ON c.PostId = p.id";
+                              LEFT JOIN Post p ON c.PostId = p.id;
+                              LEFT JOIN User u ON c.UserProfileId = u.id;";
                     var reader = cmd.ExecuteReader();
 
                     var comments = new List<Comment>();
@@ -34,8 +36,7 @@ namespace TabloidMVC.Repositories
                             Id = reader.GetInt32(reader.GetOrdinal("CommentId")),
                             Subject = reader.GetString(reader.GetOrdinal("Subject")),
                             Content = reader.GetString(reader.GetOrdinal("Content")),
-                            AuthorName = reader.GetString(reader.GetOrdinal("AuthorName")),
-                            CreationDate = reader.GetDateTime(reader.GetOrdinal("CreationDate"))
+                            CreationDate = reader.GetDateTime(reader.GetOrdinal("CreateDateTime"))
                         };
 
                        comment.Post = new Post()
@@ -43,6 +44,8 @@ namespace TabloidMVC.Repositories
                            Id = reader.GetInt32(reader.GetOrdinal("PostId")),
                            Title = reader.GetString(reader.GetOrdinal("Title"))
                        };
+
+
 
                     comments.Add(comment);
                     }
