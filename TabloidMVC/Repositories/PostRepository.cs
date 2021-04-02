@@ -193,6 +193,7 @@ namespace TabloidMVC.Repositories
                     }
                     reader.Close();
                     return posts;
+
                 }
             }
         }
@@ -203,6 +204,7 @@ namespace TabloidMVC.Repositories
             using (var conn = Connection)
             {
                 conn.Open();
+
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
