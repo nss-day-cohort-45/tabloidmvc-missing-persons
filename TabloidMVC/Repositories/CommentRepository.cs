@@ -75,9 +75,11 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                         SELECT c.Id AS CommentId, c.PostId, c.UserProfileId, c.Subject, c.Content, c.CreateDateTime,
-                            p.Id AS PostId, p.Title
+                            p.Id AS PostId, p.Title,
+                            u.Id AS UserId, u.DisplayName
                         FROM Comment c
                         LEFT JOIN Post p ON c.PostId = p.id
+                        LEFT JOIN UserProfile u ON c.UserProfileId = u.id
                         WHERE PostId = @postId
                         ORDER BY c.CreateDateTime DESC
                     ";
@@ -92,7 +94,7 @@ namespace TabloidMVC.Repositories
                     {
                         Comment comment = new Comment()
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Id = reader.GetInt32(reader.GetOrdinal("CommentId")),
                             PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
                             Subject = reader.GetString(reader.GetOrdinal("Subject")),
                             Content = reader.GetString(reader.GetOrdinal("Content")),

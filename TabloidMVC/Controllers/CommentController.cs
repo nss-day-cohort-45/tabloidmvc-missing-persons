@@ -24,10 +24,16 @@ namespace TabloidMVC.Controllers
         }
 
         // GET: CommentController
-        public ActionResult Index(int PostId)
+        public ActionResult Index(int id)
         {
             Post post = _postRepository.GetPublishedPostById(id);
-            List<Comment> comments = _commentRepo.GetCommentsByPostId(post.Id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            List<Comment> comments = _commentRepo.GetCommentsByPostId(id);
 
             CommentViewModel vm = new CommentViewModel()
             {
