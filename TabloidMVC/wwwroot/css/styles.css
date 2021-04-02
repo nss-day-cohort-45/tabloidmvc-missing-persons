@@ -10811,5 +10811,6 @@ form .row:first-child .floating-label-form-group {
 .commentNav {
     display: flex;
     flex-direction: row;
+    padding: 1rem;
 }
 
