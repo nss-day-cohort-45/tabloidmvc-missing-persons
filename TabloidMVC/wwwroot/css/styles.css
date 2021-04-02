@@ -10807,3 +10807,10 @@ form .row:first-child .floating-label-form-group {
         margin-top: calc(2rem + 72px);
     }
 }
+
+.commentNav {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+}
+
