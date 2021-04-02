@@ -4,58 +4,70 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
+<div class="container pt-5">
+<h1>Details</h1>
     <h4>UserProfile</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            <img width="50" src="model.ImageLocation"/>
-        </dt>
-        <dd class = "col-sm-10">
-            <img width="50" src="model.ImageLocation"/>
-        </dd>
-        <dt class = "col-sm-2">
+        <div>
+            @if (!string.IsNullOrWhiteSpace(Model.ImageLocation))
+            {
+                <section class="row justify-content-center">
+                    <div>
+                        <img src="@Model.ImageLocation" />
+                    </div>
+                </section>
+            }
+            else
+            {
+                <section class="row justify-content-center">
+                    <div>
+                        <img src="item.ImageLocation" style= "width: 50px" alt="" />
+                    </div>
+                </section>
+            }
+        </div>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FirstName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.LastName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.LastName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DisplayName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DisplayName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Email)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Email)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreateDateTime)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CreateDateTime)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UserType.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UserType.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FullName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FullName)
         </dd>
     </dl>

@@ -58,10 +58,10 @@
                 @Html.DisplayFor(modelItem => item.CreateDateTime)
             </td>
             <td>
-                <img width="50" src="@item.ImageLocation" alt="avatar" />
+                <img width="100" src="@item.ImageLocation" alt="avatar" />
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserTypeId)
+                @Html.DisplayFor(modelItem => item.UserType.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FullName)

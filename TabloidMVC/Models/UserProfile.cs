@@ -20,6 +20,7 @@ namespace TabloidMVC.Models
         public string Email { get; set; }
         [DisplayName("Date of Creation")]
         public DateTime CreateDateTime { get; set; }
+        [DisplayName("User Type")]
         public int UserTypeId { get; set; }
         public UserType UserType { get; set; }
         [DisplayName("Full Name")]
