@@ -163,12 +163,11 @@ namespace TabloidMVC.Repositories
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Title = reader.GetString(reader.GetOrdinal("Title")),
                             Content = reader.GetString(reader.GetOrdinal("Content")),
-                            ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
                             PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
                             CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("userProfileId")),
-                           
+                            ImageLocation = DbUtils.GetNullableString(reader, "ImageLocation")
 
                         };
 
@@ -183,11 +182,6 @@ namespace TabloidMVC.Repositories
                             DisplayName = reader.GetString(reader.GetOrdinal("Author"))
                         };
 
-                        // Check if optional columns are null
-                        if (reader.IsDBNull(reader.GetOrdinal("ImageLocation")) == false)
-                        {
-                            post.ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation"));
-                        }
 
                         posts.Add(post);
                     }
@@ -225,6 +219,28 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@UserProfileId", post.UserProfileId);
 
                     post.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+     
+        public void DeletePost(int postId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Post
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", postId);
+
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
