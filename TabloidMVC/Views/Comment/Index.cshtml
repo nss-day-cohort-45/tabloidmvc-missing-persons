@@ -7,9 +7,16 @@
 <div class="container pt-5">
     <h1>@Model.ElementAt(0).Post.Title</h1>
 
-    <p>
-        <a class="btn btn-primary" asp-action="Create">Add A Comment</a>
-    </p>
+    <div class="commentNav">
+        <div>
+            <a class="btn btn-primary" asp-action="Create">Add A Comment</a>
+        </div>
+        <div>
+            <a asp-action="Post" asp-route-id="@Model.ElementAt(0).PostId" class="btn btn-outline-primary mx-1" title="Back">
+                Back to Post
+            </a>
+        </div>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -36,7 +43,7 @@
                 <tr>
 
                     <td>
-                        @Html.DisplayFor(modelItem => item.AuthorName)
+                        @Html.DisplayFor(modelItem => item.UserProfile.DisplayName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Subject)

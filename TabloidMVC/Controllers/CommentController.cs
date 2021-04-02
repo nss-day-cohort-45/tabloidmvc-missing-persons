@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TabloidMVC.Repositories;
 using System.Collections.Generic;
-using TabloidMVC.Models;
+using TabloidMVC.Models.ViewModels;
 
 namespace TabloidMVC.Controllers
 {
@@ -21,7 +21,7 @@ namespace TabloidMVC.Controllers
         // GET: CommentController
         public ActionResult Index()
         {
-            List<Comment> comments = _commentRepo.GetAllComments();
+            List<Comment> comments = _commentRepo.GetCommentsByPostId();
             return View(comments);
         }
 

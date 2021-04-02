@@ -17,7 +17,9 @@ FROM Comment c
     LEFT JOIN Post p ON c.PostId = p.id
     LEFT JOIN UserProfile u ON c.UserProfileId = u.id;
 
+USE [TabloidMVC]
+GO
 SET IDENTITY_INSERT [Comment] ON
 INSERT INTO [Comment] ([ID], [PostId], [UserProfileId], [Subject], [Content], [CreateDateTime]) 
-VALUES (1, 1, 1, 'Great Post!', 'This is so relatable. So much great content!', SYSDATETIME());
+VALUES (5, 1, 2, 'This is a new comment!', 'To see if it shows in all of the comments', SYSDATETIME());
 SET IDENTITY_INSERT [Comment] OFF

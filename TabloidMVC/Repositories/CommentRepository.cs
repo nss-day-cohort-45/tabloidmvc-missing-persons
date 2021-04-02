@@ -24,7 +24,8 @@ namespace TabloidMVC.Repositories
                               u.Id AS UserId, u.DisplayName
                          FROM Comment c
                               LEFT JOIN Post p ON c.PostId = p.id
-                              LEFT JOIN UserProfile u ON c.UserProfileId = u.id;";
+                              LEFT JOIN UserProfile u ON c.UserProfileId = u.id
+                         ORDER BY c.CreateDateTime;";
                     var reader = cmd.ExecuteReader();
 
                     var comments = new List<Comment>();
@@ -64,7 +65,10 @@ namespace TabloidMVC.Repositories
 
 
 
-
+        public List<Comment> GetCommentsByPostId()
+        { 
+        
+        }
 
 
 
