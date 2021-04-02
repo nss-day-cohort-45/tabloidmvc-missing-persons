@@ -115,6 +115,7 @@ namespace TabloidMVC.Repositories
                             WHERE Id = @id";
 
                     //and we will set whatever the user entered for name as the new value for the name of the object the user selected 
+                    cmd.Parameters.AddWithValue("@id", category.Id);
                     cmd.Parameters.AddWithValue("@name", category.Name);
 
                     cmd.ExecuteNonQuery();
