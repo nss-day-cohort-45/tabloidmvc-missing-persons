@@ -1,18 +1,18 @@
-﻿@model IEnumerable<TabloidMVC.Models.Comment>
+﻿@model TabloidMVC.Models.ViewModels.CommentViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <div class="container pt-5">
-    <h1>@Model.ElementAt(0).Post.Title</h1>
+    <h1>@Model.Post.Title</h1>
 
     <div class="commentNav">
         <div>
             <a class="btn btn-primary" asp-action="Create">Add A Comment</a>
         </div>
         <div>
-            <a asp-action="Post" asp-route-id="@Model.ElementAt(0).PostId" class="btn btn-outline-primary mx-1" title="Back">
+            <a asp-action="Post" asp-route-id="@Model.Post.Id" class="btn btn-outline-primary mx-1" title="Back">
                 Back to Post
             </a>
         </div>
@@ -22,23 +22,23 @@
             <tr>
 
                 <th>
-                    @Html.DisplayNameFor(model => model.AuthorName)
+                    @Html.DisplayNameFor(model => model.Post.UserProfile)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Subject)
+                    @Html.DisplayNameFor(model => model.Comment.Subject)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Content)
+                    @Html.DisplayNameFor(model => model.Comment.Content)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CreationDate)
+                    @Html.DisplayNameFor(model => model.Comment.CreationDate)
                 </th>
 
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Comment)
             {
                 <tr>
 

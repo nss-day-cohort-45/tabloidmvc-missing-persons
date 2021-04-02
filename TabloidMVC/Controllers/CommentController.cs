@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TabloidMVC.Repositories;
 using System.Collections.Generic;
 using TabloidMVC.Models.ViewModels;
+using TabloidMVC.Models;
 
 namespace TabloidMVC.Controllers
 {
@@ -11,18 +12,30 @@ namespace TabloidMVC.Controllers
     {
 
         private readonly ICommentRepository _commentRepo;
+        private readonly IPostRepository _postRepository;
 
         // ASP.NET will give us an instance of our Walker Repository. This is called "Dependency Injection"
-        public CommentController(ICommentRepository commentRepository)
+        public CommentController(
+            ICommentRepository commentRepository,
+            IPostRepository postRepository)
         {
             _commentRepo = commentRepository;
+            _postRepository = postRepository;
         }
 
         // GET: CommentController
-        public ActionResult Index()
+        public ActionResult Index(int PostId)
         {
-            List<Comment> comments = _commentRepo.GetCommentsByPostId();
-            return View(comments);
+            Post post = _postRepository.GetPublishedPostById(id);
+            List<Comment> comments = _commentRepo.GetCommentsByPostId(post.Id);
+
+            CommentViewModel vm = new CommentViewModel()
+            {
+                Post = post,
+                PostComments = comments
+            };
+
+            return View(vm);
         }
 
         // GET: CommentController/Details/5

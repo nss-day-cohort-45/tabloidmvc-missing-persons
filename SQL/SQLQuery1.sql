@@ -21,5 +21,14 @@ USE [TabloidMVC]
 GO
 SET IDENTITY_INSERT [Comment] ON
 INSERT INTO [Comment] ([ID], [PostId], [UserProfileId], [Subject], [Content], [CreateDateTime]) 
-VALUES (5, 1, 2, 'This is a new comment!', 'To see if it shows in all of the comments', SYSDATETIME());
+VALUES (6, 2, 1, 'This is a new comment!', 'To see if it shows in all of the comments', SYSDATETIME());
 SET IDENTITY_INSERT [Comment] OFF
+
+USE [TabloidMVC]
+GO
+SELECT c.Id AS CommentId, c.PostId, c.UserProfileId, c.Subject, c.Content, c.CreateDateTime,
+p.Id AS PostId, p.Title
+FROM Comment c
+LEFT JOIN Post p ON c.PostId = p.id
+WHERE PostId = p.id
+ORDER BY c.CreateDateTime DESC
