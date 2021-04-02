@@ -24,9 +24,9 @@ namespace TabloidMVC.Controllers
         }
 
         // GET: UserProfileController/Details/5
-        public ActionResult Details(string email)
+        public ActionResult Details(int id)
         {
-            UserProfile profile = _userProfileRepository.GetByEmail(email);
+            UserProfile profile = _userProfileRepository.GetById(id);
 
             if (profile == null)
             {

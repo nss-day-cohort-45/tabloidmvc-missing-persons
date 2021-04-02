@@ -59,15 +59,63 @@ namespace TabloidMVC.Repositories
                 }
             };
         }
-  
 
+        public UserProfile GetById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT u.id, u.FirstName, u.LastName, u.DisplayName, u.Email,
+                              u.CreateDateTime, u.ImageLocation, u.UserTypeId,
+                              ut.[Name] AS UserTypeName
+                         FROM UserProfile u
+                              LEFT JOIN UserType ut ON u.UserTypeId = ut.id
+                        WHERE u.id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        UserProfile userProfile = new UserProfile
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            ImageLocation = DbUtils.GetNullableString(reader, "ImageLocation"),
+                            UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                            UserType = new UserType()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                            },
+                        };
+
+                        reader.Close();
+                        return userProfile;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return null;
+                    }
+                }
+            }
+        }
 
         public UserProfile GetByEmail(string email)
         {
-            using (var conn = Connection)
+            using (SqlConnection conn = Connection)
             {
                 conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
                        SELECT u.id, u.FirstName, u.LastName, u.DisplayName, u.Email,
@@ -76,14 +124,14 @@ namespace TabloidMVC.Repositories
                          FROM UserProfile u
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
                         WHERE email = @email";
+
                     cmd.Parameters.AddWithValue("@email", email);
 
-                    UserProfile userProfile = null;
-                    var reader = cmd.ExecuteReader();
+                    SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
-                        userProfile = new UserProfile()
+                        UserProfile userProfile = new UserProfile
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Email = reader.GetString(reader.GetOrdinal("Email")),
@@ -99,11 +147,15 @@ namespace TabloidMVC.Repositories
                                 Name = reader.GetString(reader.GetOrdinal("TypeName"))
                             },
                         };
+
+                        reader.Close();
+                        return userProfile;
                     }
-
-                    reader.Close();
-
-                    return userProfile;
+                    else
+                    {
+                        reader.Close();
+                        return null;
+                    }
                 }
             }
         }
