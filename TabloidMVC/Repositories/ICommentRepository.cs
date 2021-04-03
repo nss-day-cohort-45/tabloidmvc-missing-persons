@@ -9,7 +9,10 @@ namespace TabloidMVC.Repositories
     public interface ICommentRepository
     {
         List<Comment> GetAllComments();
+        Comment GetCommentById(int id);
         List<Comment> GetCommentsByPostId(int PostId);
         void Add(Comment comment);
+        void EditComment(Comment comment);
+        void DeleteComment(int id);
     }
 }

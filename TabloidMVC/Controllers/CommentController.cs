@@ -4,6 +4,7 @@ using TabloidMVC.Repositories;
 using System.Collections.Generic;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Models;
+using System;
 
 namespace TabloidMVC.Controllers
 {
@@ -56,46 +57,59 @@ namespace TabloidMVC.Controllers
             return View();
         }
 
-        // POST: CommentController/Create
+        // POST: Comment/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Comment comment)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _commentRepo.Add(comment);
+
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(comment);
             }
         }
 
-        // GET: CommentController/Edit/5
+        // GET: Comment/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Comment comment = _commentRepo.GetCommentById(id);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            return View(comment);
         }
 
-        // POST: CommentController/Edit/5
+        // POST: Comment/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Comment comment)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _commentRepo.EditComment(comment);
+
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(comment);
             }
         }
 
-        // GET: CommentController/Delete/5
+        // GET: Comment/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Comment comment = _commentRepo.GetCommentById(id);
+
+            return View(comment);
         }
 
         // POST: CommentController/Delete/5
