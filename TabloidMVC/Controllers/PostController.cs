@@ -15,11 +15,13 @@ namespace TabloidMVC.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IUserProfileRepository _userProfileRepository;
 
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository)
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, IUserProfileRepository userProfileRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         public IActionResult Index()
@@ -82,9 +84,15 @@ namespace TabloidMVC.Controllers
         public ActionResult Delete(int id)
         {
             int userId = GetCurrentUserProfileId();
+            int userTypeId = _userProfileRepository.GetById(userId).UserTypeId;
             Post userPost = _postRepository.GetUserPostById(id, userId);
+            Post anyPost = _postRepository.GetAnyPostById(id);
 
-            if (userPost != null)
+            if (userTypeId == 1)
+            {
+              return View(anyPost);
+            }
+            else if (userPost != null)
             {
               return View(userPost);
             }
@@ -99,10 +107,24 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, Post post)
         {
-
             int userId = GetCurrentUserProfileId();
+            int userTypeId = _userProfileRepository.GetById(userId).UserTypeId; 
             Post userPost = _postRepository.GetUserPostById(id, userId);
-            if (userPost != null)
+
+            if(userTypeId == 1)
+            {
+                try
+                {
+                    _postRepository.DeletePost(id);
+
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            else if(userPost != null)
             {
                 try
                 {
@@ -115,9 +137,9 @@ namespace TabloidMVC.Controllers
                     return View(post);
                 }
             }
-            else 
+            else
             {
-              return RedirectToAction("Index");
+                return RedirectToAction("Index");
             }
            
         }
