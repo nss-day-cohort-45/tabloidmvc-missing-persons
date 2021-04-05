@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using TabloidMVC.Models;
 using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
@@ -25,7 +26,14 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            UserProfile profile = _userProfileRepository.GetById(id);
+
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            return View(profile);
         }
 
         // GET: UserProfileController/Create
