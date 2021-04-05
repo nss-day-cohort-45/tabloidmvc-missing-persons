@@ -134,6 +134,47 @@ namespace TabloidMVC.Repositories
         }
 
 
+        public Post GetAnyPostById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT p.Id, p.Title, p.Content, 
+                              p.ImageLocation AS HeaderImage,
+                              p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                              p.CategoryId, p.UserProfileId,
+                              c.[Name] AS CategoryName,
+                              u.FirstName, u.LastName, u.DisplayName, 
+                              u.Email, u.CreateDateTime, u.ImageLocation AS AvatarImage,
+                              u.UserTypeId, 
+                              ut.[Name] AS UserTypeName
+                         FROM Post p
+                              LEFT JOIN Category c ON p.CategoryId = c.id
+                              LEFT JOIN UserProfile u ON p.UserProfileId = u.id
+                              LEFT JOIN UserType ut ON u.UserTypeId = ut.id
+                        WHERE p.id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+                    var reader = cmd.ExecuteReader();
+
+                    Post post = null;
+
+                    if (reader.Read())
+                    {
+                        post = NewPostFromReader(reader);
+                    }
+
+                    reader.Close();
+
+                    return post;
+                }
+            }
+        }
+
+
         public List<Post> GetPostsByUserProfileId(int userProfileId)
         {
             using (SqlConnection conn = Connection)
@@ -163,12 +204,11 @@ namespace TabloidMVC.Repositories
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Title = reader.GetString(reader.GetOrdinal("Title")),
                             Content = reader.GetString(reader.GetOrdinal("Content")),
-                            ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
                             PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
                             CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("userProfileId")),
-                           
+                            ImageLocation = DbUtils.GetNullableString(reader, "ImageLocation")
 
                         };
 
@@ -183,11 +223,6 @@ namespace TabloidMVC.Repositories
                             DisplayName = reader.GetString(reader.GetOrdinal("Author"))
                         };
 
-                        // Check if optional columns are null
-                        if (reader.IsDBNull(reader.GetOrdinal("ImageLocation")) == false)
-                        {
-                            post.ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation"));
-                        }
 
                         posts.Add(post);
                     }
@@ -225,6 +260,28 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@UserProfileId", post.UserProfileId);
 
                     post.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+     
+        public void DeletePost(int postId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Post
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", postId);
+
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
