@@ -41,6 +41,7 @@ namespace TabloidMVC.Repositories
                     while (reader.Read())
                     {
                         posts.Add(NewPostFromReader(reader));
+
                     }
 
                     reader.Close();
@@ -142,7 +143,7 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.CategoryId, p.UserProfileId, Category.Name AS Name, UserProfile.Id, UserProfile.DisplayName AS DisplayName
+                SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.CategoryId, p.UserProfileId, Category.Name AS Category, UserProfile.Id, UserProfile.DisplayName AS Author
                 FROM Post p
                 JOIN Category ON Category.Id = p.CategoryId
                 JOIN UserProfile ON UserProfile.Id = p.UserProfileId
@@ -173,13 +174,13 @@ namespace TabloidMVC.Repositories
 
                         post.Category = new Category()
                         { 
-                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            Name = reader.GetString(reader.GetOrdinal("Category")),
 
                         };
 
                         post.UserProfile = new UserProfile()
                         {
-                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName"))
+                            DisplayName = reader.GetString(reader.GetOrdinal("Author"))
                         };
 
                         // Check if optional columns are null
@@ -192,6 +193,7 @@ namespace TabloidMVC.Repositories
                     }
                     reader.Close();
                     return posts;
+
                 }
             }
         }
@@ -202,6 +204,7 @@ namespace TabloidMVC.Repositories
             using (var conn = Connection)
             {
                 conn.Open();
+
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
