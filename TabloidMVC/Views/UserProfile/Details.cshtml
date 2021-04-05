@@ -77,9 +77,10 @@
         <a asp-action="Edit" asp-route-id="@Model.Email" class="btn btn-outline-primary mx-1" title="Edit">
             <i class="fas fa-pencil-alt"></i>
         </a>
-        <a asp-action="Delete" asp-route-id="@Model.Email" class="btn btn-outline-primary mx-1" title="Delete">
-            <i class="fas fa-trash"></i>
-        </a> |       
     *@
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to List</a> |
+    <a asp-action="Deactivate" asp-route-id="@Model.Email" class="btn btn-outline-primary mx-1" title="Deactivate">
+        <i class="fas fa-trash"></i>
+    </a>
+
 </div>
