@@ -143,8 +143,8 @@ namespace TabloidMVC.Repositories
                             UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                             UserType = new UserType()
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("TypeId")),
-                                Name = reader.GetString(reader.GetOrdinal("TypeName"))
+                                Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
                             },
                         };
 
