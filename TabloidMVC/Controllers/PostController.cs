@@ -81,9 +81,17 @@ namespace TabloidMVC.Controllers
         // GET: PostController/Delete/5
         public ActionResult Delete(int id)
         {
-            Post post = _postRepository.GetPublishedPostById(id);
+            int userId = GetCurrentUserProfileId();
+            Post userPost = _postRepository.GetUserPostById(id, userId);
 
-            return View(post);
+            if (userPost != null)
+            {
+              return View(userPost);
+            }
+            else
+            {
+              return RedirectToAction("Index");
+            }
         }
 
         // POST: PostController/Delete/5
@@ -91,17 +99,27 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, Post post)
         {
-            int userId = GetCurrentUserProfileId();
-            if (userId == post.UserProfileId)
-            {
-                _postRepository.DeletePost(id);
 
-                return RedirectToAction("Index");
+            int userId = GetCurrentUserProfileId();
+            Post userPost = _postRepository.GetUserPostById(id, userId);
+            if (userPost != null)
+            {
+                try
+                {
+                    _postRepository.DeletePost(id);
+
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    return View(post);
+                }
             }
             else 
-            { 
-                return RedirectToAction("Index");
+            {
+              return RedirectToAction("Index");
             }
+           
         }
 
         private int GetCurrentUserProfileId()
