@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 
 namespace TabloidMVC.Repositories
 {
@@ -200,8 +201,7 @@ namespace TabloidMVC.Repositories
                             Subject = reader.GetString(reader.GetOrdinal("Subject")),
                             Content = reader.GetString(reader.GetOrdinal("Content")),
                             PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
-                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
-                            CreationDate = DateTime.Now
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId"))
                         };
 
                         reader.Close();
