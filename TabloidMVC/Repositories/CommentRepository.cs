@@ -2,7 +2,10 @@
 using TabloidMVC.Models;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+<<<<<<< HEAD
 using System;
+=======
+>>>>>>> main
 
 namespace TabloidMVC.Repositories
 {
