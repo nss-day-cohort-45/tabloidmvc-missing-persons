@@ -2,6 +2,7 @@
 using TabloidMVC.Models;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+using System;
 
 namespace TabloidMVC.Repositories
 {
@@ -143,6 +144,7 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@PostId", comment.PostId);
 
                     comment.Id = (int)cmd.ExecuteScalar();
+                    comment.CreationDate = DateTime.Now;
                 }
             }
         }
