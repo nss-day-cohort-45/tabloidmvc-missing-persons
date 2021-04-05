@@ -2,10 +2,8 @@
 using TabloidMVC.Models;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
-<<<<<<< HEAD
 using System;
-=======
->>>>>>> main
+using TabloidMVC.Utils;
 
 namespace TabloidMVC.Repositories
 {
@@ -136,7 +134,8 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                         INSERT INTO Comment (
-                            Subject, Content, CreateDateTime, UserProfileId, PostId)
+                            Subject, Content, CreateDateTime, UserProfileId, PostId, UserProfile.DisplayName, )
+                        LEFT JOIN UserProfile ON Comment.UserProfileId = UserProfile.Id
                         OUTPUT INSERTED.ID
                         VALUES (
                             @Subject, @Content, @CreateDateTime, @UserProfileId, @PostId )";
@@ -145,9 +144,14 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@CreateDateTime", comment.CreationDate);
                     cmd.Parameters.AddWithValue("@UserProfileId", comment.UserProfileId);
                     cmd.Parameters.AddWithValue("@PostId", comment.PostId);
-
+                    cmd.Parameters.AddWithValue("@DisplayName", comment.UserProfile.DisplayName);
+    
                     comment.Id = (int)cmd.ExecuteScalar();
-                    comment.CreationDate = DateTime.Now;
+
+                    cmd.Parameters.AddWithValue("@UserProfile", DbUtils.ValueOrDBNull(comment.UserProfile));
+                    cmd.Parameters.AddWithValue("@Post", DbUtils.ValueOrDBNull(comment.Post));
+
+
                 }
             }
         }

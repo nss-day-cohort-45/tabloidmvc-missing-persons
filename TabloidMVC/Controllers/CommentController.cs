@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Models;
 using System;
+using System.Security.Claims;
+using Microsoft.VisualBasic;
 
 namespace TabloidMVC.Controllers
 {
@@ -54,25 +56,34 @@ namespace TabloidMVC.Controllers
         // GET: CommentController/Create
         public ActionResult Create()
         {
-            return View();
+            var vm = new CommentViewModel();
+            return View(vm);
         }
 
         // POST: Comment/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Comment comment)
+
+        public IActionResult Create(CommentViewModel vm)
         {
             try
             {
-                _commentRepo.Add(comment);
+                vm.Comment.CreationDate = DateAndTime.Now;
+                
+                vm.Comment.UserProfileId = GetCurrentUserProfileId();
 
-                return RedirectToAction("Index");
+                _commentRepo.Add(vm.Comment);
+
+                return RedirectToAction("Index", new { id = vm.Comment.Id });
             }
-            catch (Exception ex)
+            catch
             {
-                return View(comment);
+                
+                return View(vm);
             }
         }
+
+
 
         // GET: Comment/Edit/5
         public ActionResult Edit(int id)
@@ -125,6 +136,12 @@ namespace TabloidMVC.Controllers
             {
                 return View();
             }
+        }
+
+        private int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }
