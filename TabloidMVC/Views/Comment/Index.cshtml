@@ -9,7 +9,7 @@
 
     <div class="commentNav">
         <div>
-            <a class="btn btn-primary" asp-action="Create">Add A Comment</a>
+            <a class="btn btn-primary" asp-action="Create" asp-route-id="@Model.Post.Id">Add A Comment</a>
         </div>
         <div>
             <a asp-action="Details" asp-controller="Post" asp-route-id="@Model.Post.Id" class="btn btn-outline-primary mx-1" title="View">
